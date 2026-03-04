@@ -1,7 +1,7 @@
 module SuperNatural
 
 export natural, natdims, natdim, unitless
-export NaturalSystem, oneunit, unitless_system
+export NaturalSystem, oneunit_system, unitless_system
 export PARTICLE_UNITS
 
 using Unitful
