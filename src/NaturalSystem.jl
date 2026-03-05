@@ -1,9 +1,9 @@
-struct NaturalSystem
-    conversion::DimProd
+struct NaturalSystem{C <: DimProd, U <: DimProd}
+    conversion::C
     weights::Basis
-    units::DimProd
+    units::U
 
-    NaturalSystem(conversions::DimProd, weights::Basis, units::DimProd) = new(conversions, weights, units)
+    NaturalSystem(conversions::DimProd, weights::Basis, units::DimProd) = new{typeof(conversions), typeof(units)}(conversions, weights, units)
 end
 
 """
