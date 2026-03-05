@@ -1,4 +1,4 @@
-natdims(q, system::NaturalSystem = DEFAULT_UNITS) = system.weights(q)
+natdims(q, system::NaturalSystem = getdefault()) = system.weights(q)
 natdim(args...) = only(natdims(args...))
 
 rawnatural(q, system::NaturalSystem) = q * system.conversion(q)
@@ -24,6 +24,6 @@ function natural(q, system::NaturalSystem, units::Unitful.Units...)
     uconvert(unit, rawnatural(q, system) / system.conversion(unit))
 end
 
-natural(q, units::Unitful.Units...) = natural(q, DEFAULT_UNITS, units...)
+natural(q, units::Unitful.Units...) = natural(q, getdefault(), units...)
 
 unitless(q) = natural(q, QG_UNITS)

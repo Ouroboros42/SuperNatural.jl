@@ -7,6 +7,15 @@ const COMMON_CONVERSIONS = (Unitful.c, Unitful.ħ, Unitful.k, 4π*Unitful.ϵ0, M
 
 const PARTICLE_UNITS = oneunit_system(Unitful.eV, COMMON_CONVERSIONS...)
 
-const DEFAULT_UNITS = PARTICLE_UNITS
-
 const QG_UNITS = unitless_system(Unitful.G, COMMON_CONVERSIONS...)
+
+const INITIAL_DEFAULT = PARTICLE_UNITS
+const DEFAULT_UNITS = Ref(INITIAL_DEFAULT)
+
+function setdefault(system::NaturalSystem = INITIAL_DEFAULT)
+    DEFAULT_UNITS[] = system
+end
+
+function getdefault()
+    DEFAULT_UNITS[]
+end
