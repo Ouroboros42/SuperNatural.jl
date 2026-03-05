@@ -2,7 +2,7 @@ module SuperNatural
 
 export natural, natdims, natdim, unitless
 export NaturalSystem, oneunit_system, unitless_system
-export PARTICLE_UNITS
+export PARTICLE_UNITS, QG_UNITS
 
 using Unitful
 using LinearAlgebra

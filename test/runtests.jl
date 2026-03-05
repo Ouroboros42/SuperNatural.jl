@@ -13,4 +13,6 @@ using Test
     weirdunits = oneunit_system(u"kg", 2u"m/s", u"N")
 
     @test natural(4u"m", weirdunits) ≈ 1u"kg"
+
+    @test natural()
 end
