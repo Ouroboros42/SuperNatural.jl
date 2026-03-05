@@ -19,5 +19,11 @@ Inspired by [NaturallUnitful.jl](https://github.com/MasonProtter/NaturallyUnitfu
 
 Uses particle physics units (`c = ħ = k = 4πϵ₀ = 1`) by default, which are extended to include `G = 1` in `QG_UNITS`. Other systems can be made the default using `SuperNatural.setdefault`.
 
+## Main Interface
+- Convert units via `natural`, or into a number via `unitless` (uses `QG_UNITS`).
+- Define a new natural unit system via `NaturalSystem`, `oneunit_system` or `unitless_system`.
+- Update/check default system via `SuperNatural.setdefault`/`SuperNatural.getdefault`.
+- Get natural dimensions using `natdims`/`natdim`.
+
 
 
