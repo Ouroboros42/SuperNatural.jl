@@ -14,5 +14,5 @@ using Test
 
     @test natural(4u"m", weirdunits) ≈ 1u"kg"
 
-    @test natural()
+    @test natural(u"G"^(-1//2), QG_UNITS, u"μg") ≈ 21.7u"μg" rtol = 0.05
 end
