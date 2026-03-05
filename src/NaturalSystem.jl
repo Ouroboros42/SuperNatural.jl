@@ -26,5 +26,3 @@ function NaturalSystem(free_units, naturally_one)
 
     NaturalSystem(conversion, free_weights, dim_units)
 end
-
-free_dims(system::NaturalSystem) = length(system.weights)
