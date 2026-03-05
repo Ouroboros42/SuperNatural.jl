@@ -9,17 +9,28 @@ natural(q, system::NaturalSystem) = uconvert(system.units(q), rawnatural(q, syst
 Express `q` in terms of the given `units`, given the conversions implied by `system`.
 """
 function natural(q, system::NaturalSystem, units::Unitful.Units...)
-    unit_powers = try
-        exact_ldiv(stack(system.weights, units), system.weights(q))
-    catch err
-        if err isa LinearAlgebra.SingularException
-            throw(ArgumentError("Cannot express $q in units $units for the given system."))
-        else
-            rethrow(err)
-        end
-    end
+    qweights = system.weights(q)
 
-    unit = mapreduce(^, *, units, unit_powers, init = NoUnits)
+    if iszero(qweights)
+        unit = only(units) # No point trying to infer from multiple units
+
+        if !iszero(system.weights(unit))
+            throw(ArgumentError("Cannot express naturally unitless quantity $q in terms of unitful $unit."))
+        end
+    else
+        unit_powers = try
+            exact_ldiv(stack(system.weights, units), qweights)
+        catch err
+            if err isa LinearAlgebra.SingularException
+                throw(ArgumentError("Cannot express $q in units $units for the given system."))
+            else
+                rethrow(err)
+            end
+        end
+        
+        unit = mapreduce(^, *, units, unit_powers, init = NoUnits)
+    end
+    
 
     uconvert(unit, rawnatural(q, system) / system.conversion(unit))
 end
