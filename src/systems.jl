@@ -17,7 +17,7 @@ const PARTICLE_UNITS = oneunit_system(Unitful.eV, COMMON_CONVERSIONS...)
 const QG_UNITS = unitless_system(Unitful.G, COMMON_CONVERSIONS...)
 
 const INITIAL_DEFAULT = PARTICLE_UNITS
-const DEFAULT_UNITS = Ref(INITIAL_DEFAULT)
+const DEFAULT_UNITS = Ref{NaturalSystem}(INITIAL_DEFAULT)
 
 function setdefault(system::NaturalSystem = INITIAL_DEFAULT)
     DEFAULT_UNITS[] = system
