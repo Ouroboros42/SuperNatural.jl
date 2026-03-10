@@ -6,9 +6,11 @@ export PARTICLE_UNITS, QG_UNITS
 
 using Unitful
 using LinearAlgebra
+using StaticArrays
 
-include("dims.jl")
-include("Basis.jl")
+include("errors.jl")
+include("DimFunc.jl")
+include("DimBasis.jl")
 include("DimProd.jl")
 include("NaturalSystem.jl")
 include("systems.jl")

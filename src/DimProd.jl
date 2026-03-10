@@ -1,18 +1,20 @@
-struct DimProd{T, V}
+struct DimProd{N, D, T, V <: NTuple{N, Any}} <: DimFunc{N, D}
     neutral::T
-    factors::Dict{Symbol, V}
+    factors::V
 
-    DimProd(neutral::T, factors::Dict{Symbol, V}) where {T, V} = new{T, V}(neutral, factors)
+    DimProd(names::DimNames{N}, neutral::T, factors::V) where {N, T, V} = new{N, names, T, V}(neutral, factors)
 end
 
-function DimProd(weights::Basis, units, init)
-    factors = mapvals(weights.elements) do weight
+function DimProd(weights::DimBasis, init, units)
+    factors = map(eachelem(weights)) do weight
         mapreduce(^, *, units, weight; init)
     end
 
-    DimProd(init, factors)
+    DimProd(dimnames(weights), init, Tuple(factors))
 end
 
-(f::DimProd)(dimname::Symbol) = get(f.factors, dimname, f.neutral) 
-(f::DimProd)(dim::Unitful.Dimension) = f(name(dim)) ^ power(dim)
+Base.getindex(f::DimProd, i) = f.factors[i]
+Base.getindex(f::DimProd, ::Nothing) = f.neutral
+
+(f::DimProd)(dim::Unitful.Dimension) = getdim(f, name(dim)) ^ power(dim)
 (f::DimProd)(dimensionful) = prod(f, eachdim(dimensionful); init = f.neutral)

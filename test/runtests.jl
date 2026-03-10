@@ -12,7 +12,9 @@ using Test
 
     weirdunits = oneunit_system(u"kg", 2u"m/s", u"N")
 
-    @test natural(4u"m", weirdunits) ≈ 1u"kg"
+    @test (@inferred natural(4u"m", weirdunits)) ≈ 1u"kg"
 
-    @test natural(u"G"^(-1//2), QG_UNITS, u"μg") ≈ 21.7u"μg" rtol = 0.05
+    @test (@inferred natural(u"G"^(-1//2), QG_UNITS, u"μg")) ≈ 21.7u"μg" rtol = 0.05
+
+    @inferred natural(u"kg^2 / m", PARTICLE_UNITS)
 end
