@@ -17,4 +17,4 @@ Base.getindex(f::DimProd, i) = f.factors[i]
 Base.getindex(f::DimProd, ::Nothing) = f.neutral
 
 (f::DimProd)(dim::Unitful.Dimension) = getdim(f, name(dim)) ^ power(dim)
-(f::DimProd)(dimensionful) = prod(f, eachdim(dimensionful); init = f.neutral)
+(f::DimProd)(dimensionful) = prod(f.(eachdim(dimensionful)); init = f.neutral)
