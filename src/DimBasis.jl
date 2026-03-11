@@ -22,6 +22,17 @@ Base.:*(M, basis::DimBasis) = DimBasis(dimnames(basis), M * basis.components)
 Base.:-(basis::DimBasis) = DimBasis(dimnames(basis), -basis.components)
 subspace(basis::DimBasis, i) = DimBasis(dimnames(basis), basis.components[i, :])
 
-(basis::DimBasis)(dim::Unitful.Dimension) = getdim(basis, dim) * power(dim)
+(basis::DimBasis)(dim::Dimension) = getdim(basis, dim) * power(dim)
 (basis::DimBasis)(dimensionful) = sum(basis, eachdim(dimensionful); init = basis[nothing])
 (basis::DimBasis)(dimensionfuls::Tuple) = hcat(basis.(dimensionfuls)...)
+
+"""
+    exact_ldiv(M, v)
+
+Solve the overconstrained matrix problem `M*x = v` exactly, assuming a solution exists.
+"""
+function exact_ldiv(M, v)
+    subspace = axes(M, 2)
+    
+    M[subspace, :] \ v[subspace]
+end

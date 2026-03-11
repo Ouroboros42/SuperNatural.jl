@@ -1,54 +1,72 @@
-rawnatural(q, system::NaturalSystem) = q * naturalconversion(q, system)
+"""
+    natdims(q, system::NaturalSystem = DEFAULT_UNITS)
+
+Get the dimensions of `q` in terms of the preferred units of `system`, as a vector of powers.
+"""
+natdims(q, system::NaturalSystem = DEFAULT_UNITS) = weights(system)(q)
 
 """
-Express `q` in terms of the standard units for `system`, using natural conversions.
-The default unit system can be changed using `SuperNatural.setdefault`.
+    natdim(q, system::NaturalSystem = DEFAULT_UNITS)
+
+For one-unit `system`, get the power of the standard unit needed to express `q`.
 """
-natural(q, system::NaturalSystem) = uconvert(naturalunits(q, system), rawnatural(q, system))
+natdim(args...) = only(natdims(args...))
 
 """
-Express `q` in terms of the given `units`, given the conversions implied by `system`.
-The default unit system can be changed using `SuperNatural.setdefault`.
+    naturalunit(q, system::NaturalSystem = DEFAULT_UNITS[, units::Units...])
+
+Find the correct unit for `q` in terms of the produts of the given `units`, using natural conversions from `system`.
+If no `units` are specified, uses the default units for `system`. 
 """
-function natural(q, system::NaturalSystem, units::Unitful.Units...)
+function naturalunit(q, system::NaturalSystem, units::Units...)
     qdims = natdims(q, system)
 
     if iszero(qdims)
-        unit = only(units) # No point trying to infer from multiple units, and no units case is already handled
-
+        unit = only(units) # No point trying to infer from multiple units
+        
         if !iszero(natdims(unit, system))
             throw(NaturalDimensionError(q, units, system))
         end
-    else
-        unit_powers = try
-            exact_ldiv(weights(system)(units), qdims)
-        catch err
-            if err isa LinearAlgebra.SingularException
-                throw(NaturalDimensionError(q, units, system))
-            else
-                rethrow(err)
-            end
-        end
 
-        unit = mapreduce(^, *, units, unit_powers, init = NoUnits)
+        return unit
+    end
 
-        if isinfdims(unit)
+    unit_powers = try
+        exact_ldiv(natdims(units, system), qdims)
+    catch err
+        if err isa LinearAlgebra.SingularException
             throw(NaturalDimensionError(q, units, system))
+        else
+            rethrow(err)
         end
     end
-    
-    uconvert(unit, rawnatural(q, system) / naturalconversion(unit, system))
+
+    unit = mapreduce(^, *, units, unit_powers, init = NoUnits)
+
+    if isinfdims(unit)
+        throw(NaturalDimensionError(q, units, system))
+    end
+
+    unit
 end
 
-function exact_ldiv(M, v)
-    subspace = axes(M, 2)
-    
-    M[subspace, :] \ v[subspace]
+naturalunit(q, units::Units...) = naturalunit(q, DEFAULT_UNITS, units...)
+
+"""
+    natural(q, system::NaturalSystem = DEFAULT_UNITS[, units::Units...])
+
+Express `q` in terms of the produts of the given `units`, using natural conversions from `system`.
+If no `units` are specified, uses the default units for `system`. 
+"""
+function natural(q, system::NaturalSystem, units::Units...)
+    unit = naturalunit(q, system, units...)
+
+    uconvert(unit, q * naturalconversion(q, system, unit))
 end
 
-natural(q, units::Unitful.Units...) = natural(q, getdefault(), units...)
+natural(q, units::Units...) = natural(q, DEFAULT_UNITS, units...)
 
-"""
-Convert `q` to a unitless number using `QG_UNITS`.
-"""
-unitless(q) = natural(q, QG_UNITS)
+# For convenience when using custom unit systems
+(system::NaturalSystem)(q, units::Units...) = natural(q, system, units...)
+
+const unitless = QG_UNITS

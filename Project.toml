@@ -1,6 +1,6 @@
 name = "SuperNatural"
 uuid = "30af72ef-8055-495b-ad66-7f9cb2edb117"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["Lucas Gathercole"]
 
 [deps]

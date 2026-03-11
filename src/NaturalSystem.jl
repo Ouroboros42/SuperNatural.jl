@@ -5,10 +5,14 @@ struct NaturalSystem{W, C <: DimProd, U <: DimProd}
     conversions::C
     units::U
 
+    @doc """
+        NaturalSystem(units::NTuple{N, Units}, naturally_one::Tuple) where N
+
+    Define a natural unit system where `free_units` are the preferred units, and the quantities `naturally_one` are used to convert as needed. 
     """
-    Define a natural unit system where `free_units` are the preferred units, and the quantities `naturally_one` are used to convert units as needed. 
-    """
-    function NaturalSystem(free_units::Tuple, naturally_one::Tuple)
+    function NaturalSystem(units::NTuple{N, Units}, naturally_one::Tuple) where N
+        free_units = filter(!=(NoUnits), units)
+
         basis = DimBasis(free_units..., naturally_one...)
 
         coordtransform = inv(basis((free_units..., naturally_one...)))
@@ -27,18 +31,16 @@ struct NaturalSystem{W, C <: DimProd, U <: DimProd}
     end
 end
 
+"""
+    NaturalSystem(naturally_one...[; unit])
+
+Define a natural unit system with at most one `unit`, and the quantities `naturally_one` used to convert as needed. 
+"""
+NaturalSystem(naturally_one...; unit::Units = NoUnits) = NaturalSystem((unit,), naturally_one)
+
 weights(::NaturalSystem{W}) where W = W
 
-naturalconversion(q, system::NaturalSystem = getdefault()) = system.conversions(q)
-naturalunits(q, system::NaturalSystem = getdefault()) = system.units(q)
+naturalconversion(q, system::NaturalSystem) = system.conversions(q)
+naturalconversion(q, system::NaturalSystem, unit) = naturalconversion(q, system) / naturalconversion(unit, system)
 
-"""
-Get the dimensions of `q` in terms of the preferred units of `system`, as a vector of powers.
-"""
-natdims(q, system::NaturalSystem = getdefault()) = weights(system)(q)
-
-"""
-For one-unit systems, get the power of the standard unit needed to express the quantity.
-"""
-natdim(args...) = only(natdims(args...))
-
+naturalunit(q, system::NaturalSystem) = system.units(q)

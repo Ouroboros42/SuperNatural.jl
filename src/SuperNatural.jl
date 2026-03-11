@@ -1,10 +1,10 @@
 module SuperNatural
 
-export natural, natdims, natdim, unitless
-export NaturalSystem, oneunit_system, unitless_system
-export PARTICLE_UNITS, QG_UNITS
+export natural, unitless, natdims, natdim, naturalunit
+export NaturalSystem, PARTICLE_UNITS, QG_UNITS
 
 using Unitful
+using Unitful: Units, Dimension, Dimensions
 using LinearAlgebra
 using StaticArrays
 
