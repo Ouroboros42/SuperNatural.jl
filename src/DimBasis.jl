@@ -29,7 +29,7 @@ subspace(basis::DimBasis, i) = DimBasis(dimnames(basis), basis.components[i, :])
 """
     exact_ldiv(M, v)
 
-Solve the overconstrained matrix problem `M*x = v` exactly, assuming a solution exists.
+Solve the overconstrained matrix problem `M*x = v` exactly, assuming a solution `x` exists.
 """
 function exact_ldiv(M, v)
     subspace = axes(M, 2)

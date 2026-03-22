@@ -42,5 +42,3 @@ weights(::NaturalSystem{W}) where W = W
 
 naturalconversion(q, system::NaturalSystem) = system.conversions(q)
 naturalconversion(q, system::NaturalSystem, unit) = naturalconversion(q, system) / naturalconversion(unit, system)
-
-naturalunit(q, system::NaturalSystem) = system.units(q)

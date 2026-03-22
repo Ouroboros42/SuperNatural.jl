@@ -15,7 +15,7 @@ natdim(args...) = only(natdims(args...))
 """
     naturalunit(q, system::NaturalSystem = DEFAULT_UNITS[, units::Units...])
 
-Find the correct unit for `q` in terms of the produts of the given `units`, using natural conversions from `system`.
+Find the correct unit for `q` using combinations of the given `units`, with natural conversions from `system`.
 If no `units` are specified, uses the default units for `system`. 
 """
 function naturalunit(q, system::NaturalSystem, units::Units...)
@@ -50,6 +50,7 @@ function naturalunit(q, system::NaturalSystem, units::Units...)
     unit
 end
 
+naturalunit(q, system::NaturalSystem) = system.units(q)
 naturalunit(q, units::Units...) = naturalunit(q, DEFAULT_UNITS, units...)
 
 """
