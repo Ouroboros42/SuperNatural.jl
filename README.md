@@ -1,3 +1,7 @@
+> [!NOTE]  
+> This project has now become part of [JuliaPhysics/NaturallyUnitful.jl](https://github.com/JuliaPhysics/NaturallyUnitful.jl). This repo is deprecated.
+
+
 # SuperNatural.jl
 A Julia package implementing flexible conversions via natural units for [Unitful.jl](https://github.com/JuliaPhysics/Unitful.jl).
 
